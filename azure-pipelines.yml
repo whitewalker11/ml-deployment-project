@@ -25,5 +25,6 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/ml-deployment-project/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/ml-deployment-project'
         tags: |
           $(tag)
