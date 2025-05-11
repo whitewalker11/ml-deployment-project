@@ -1,6 +1,7 @@
 # azure/ci-pipeline.yml
 # CI Pipeline: Build Docker Image
 
+
 trigger:
 - main
 
