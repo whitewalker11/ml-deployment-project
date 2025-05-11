@@ -1,0 +1,35 @@
+# azure/cd-pipeline.yml
+# CD Pipeline: Push Docker Image to Docker Hub
+
+trigger:
+- main  # or remove if you want this to be run manually or from CI
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  imageName: 'your-dockerhub-username/your-image-name'  # Replace with your Docker Hub repo
+
+stages:
+- stage: Push
+  displayName: Push to Docker Hub
+  jobs:
+  - job: PushImage
+    displayName: Push Docker Image
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Login to Docker Hub
+      inputs:
+        command: login
+        containerRegistry: 'dockerhub-service-connection'  # You must create this in Azure DevOps
+
+    - task: Docker@2
+      displayName: Push Image
+      inputs:
+        command: push
+        repository: '$(imageName)'
+        tags: |
+          $(tag)
