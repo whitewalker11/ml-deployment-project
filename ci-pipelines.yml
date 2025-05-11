@@ -1,0 +1,29 @@
+# azure/ci-pipeline.yml
+# CI Pipeline: Build Docker Image
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build Docker Image
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build Docker Image
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/ml-deployment-project/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/ml-deployment-project'
+        tags: |
+          $(tag)
