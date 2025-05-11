@@ -1,0 +1,24 @@
+trigger:
+  branches:
+    include: [ main ]
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.9'
+
+- script: |
+    pip install -r env/requirements.txt
+    python src/model.py
+    pytest tests/
+  displayName: Build & Test
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'myACRServiceConnection'
+    repository: 'ml-api'
+    command: 'buildAndPush'
+    Dockerfile: 'docker/Dockerfile'
